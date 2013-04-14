@@ -33,16 +33,26 @@ namespace NLuaSample
 		{
 			base.ViewDidLoad ();
 
+			string script = System.IO.File.ReadAllText ("sample.lua");
+
+			codeView.Text = script;
+			codeView.TextColor = UIColor.Green;
+
+			// Initialize the Lua interpreter.
 			if (lua == null) {
 				lua = new Lua ();
+
 				lua.LoadCLRPackage ();
 
-				
-				lua.DoString (@" import ('System')
-								 import ('System','System.Net')
-								 import ('monotouch', 'MonoTouch.Foundation')
-								 import ('monotouch', 'MonoTouch.UIKit') 
-								 import ('NLuaSample') ");
+				// Import assemblies (remember link will remove unused types/methods).
+				// http://docs.xamarin.com/guides/ios/advanced_topics/linker
+
+				lua.DoString (@"import ('System')
+						import ('System','System.Net')
+						import ('System','System.Drawing')
+						import ('monotouch', 'MonoTouch.Foundation')
+						import ('monotouch', 'MonoTouch.UIKit') 
+						import ('NLuaSample') ");
 
 			}
 			lua ["self"] = codeView;
